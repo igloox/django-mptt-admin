@@ -144,6 +144,9 @@ class DjangoMpttAdmin(admin.ModelAdmin):
             current_app=self.admin_site.name
         )
 
+    def extraInfoCallback(self, instance):
+        pass
+
     def get_tree_data(self, qs, max_level):
         pk_attname = self.model._meta.pk.attname
 
@@ -155,7 +158,7 @@ class DjangoMpttAdmin(admin.ModelAdmin):
                 move_url=self.get_admin_url('move', (quote(pk),))
             )
 
-        return util.get_tree_from_queryset(qs, handle_create_node, max_level)
+        return util.get_tree_from_queryset(qs, handle_create_node, max_level, self.extraInfoCallback)
 
     def tree_json_view(self, request):
         node_id = request.GET.get('node')

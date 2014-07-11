@@ -8,7 +8,8 @@ from django.db.models import Q
 from django.db import transaction
 
 
-def get_tree_from_queryset(queryset, on_create_node=None, max_level=None):
+def get_tree_from_queryset(queryset, on_create_node=None, max_level=None,
+                           extraInfoCallback=None):
     """
     Return tree data that is suitable for jqTree.
     The queryset must be sorted by 'tree_id' and 'left' fields.
@@ -44,6 +45,10 @@ def get_tree_from_queryset(queryset, on_create_node=None, max_level=None):
             label=six.text_type(instance),
             id=serialize_id(pk)
         )
+
+        if extraInfoCallback:
+            node_info.update(extraInfoCallback(instance))
+
         if on_create_node:
             on_create_node(instance, node_info)
 
